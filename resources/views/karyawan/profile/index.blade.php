@@ -18,7 +18,7 @@
             <div class="card-body">
                 <div class="col text-center">
                     <div class="m-t-30">
-                      <img class="round" src="{{asset(Auth::user()->foto == null ? 'backend/images/profile/user.jpg' : 'storage/images/foto_profile/'. Auth::user()->foto )}}" alt="avatar" height="150" width="150">
+                      <img class="round" src="{{asset(Auth::user()->foto == null ? 'backend/images/profile/user.png' : 'storage/images/foto_profile/'. Auth::user()->foto )}}" alt="avatar" height="150" width="150">
                         <h4 class="card-title mt-1">{{Auth::user()->name}}</h4>
                         <h6 class="small">Customer</h6>
                     </div>
