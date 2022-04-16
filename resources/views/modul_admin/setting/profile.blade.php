@@ -18,7 +18,7 @@
             <div class="card-body">
                 <div class="col text-center">
                     <div class="m-t-30">
-                      <img src="{{asset('backend/images/profile/user.jpg')}}" class="rounded" width="230" />
+                      <img src="{{asset('backend/images/profile/user.png')}}" class="rounded" width="230" />
                         <h4 class="card-title mt-1">{{$profile->name}}</h4>
                         <h6 class="small">Admininstrator</h6>
                     </div>
