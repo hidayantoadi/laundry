@@ -61,7 +61,7 @@
     <!-- begin #footer-copyright -->
     <div class="footer-copyright">
         <div class="container">
-            &copy; <?php echo date("Y") ?> Build With <i class="fa fa-heart" style="color:red"></i> - <a href="#" target="_blank" style="text-decoration:none">Laundry Umbul Harjo</a>
+            &copy; <?php echo date("Y") ?> Build With <i class="fa fa-heart" style="color:red"></i> - <a href="#" target="_blank" style="text-decoration:none">Laundry Umbul Berkah</a>
         </div>
     </div>
     <!-- end #footer-copyright -->
