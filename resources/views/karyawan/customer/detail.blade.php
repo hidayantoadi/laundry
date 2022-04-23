@@ -32,10 +32,10 @@
                         <dd class="col-sm-4">: {{$customer->alamat}}</dd>
                     </dl>
 
-                    <dl class="row">
+                    {{-- <dl class="row">
                         <dt class="col-sm-4">Kelamin</dt>
                         <dd class="col-sm-4">: {{$customer->kelamin == 'L' ? 'Laki-laki' : 'Perempuan'}}</dd>
-                    </dl>
+                    </dl> --}}
                 </div>
             </div>
              <div class="card-body">

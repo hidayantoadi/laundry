@@ -54,7 +54,7 @@
                                 </form>
                             </div>
                         </div>
-                        <span class="mt-1 ml-2" style="text-align: left"><a href=" {{route('password.request')}} ">Lupa Password ?</a></span>
+                        {{-- <span class="mt-1 ml-2" style="text-align: left"><a href=" {{route('password.request')}} ">Lupa Password ?</a></span> --}}
                         <div class="login-footer">
                             <div class="divider">
                                 <div class="divider-text"><a href="/">Umbul Laundry</a></div>
