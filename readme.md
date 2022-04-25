@@ -60,10 +60,6 @@ Laundry dibangun menggunakan [Laravel](http://laravel.com), the best existing PH
 -   Dashboard Customer
 -   Ubah thema (untuk saat ini hanya ada Dark & White)
 
-## Sponsors
-
-Support E-Laundry by becoming a sponsor on [Saweria](https://saweria.co/andes2912). Your logo will show up here with a link to your website.
-
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
