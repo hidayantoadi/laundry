@@ -31,6 +31,8 @@ class PelayananController extends Controller
     // Proses simpan order
     public function store(AddOrderRequest $request)
     {
+        $data = $request->all();
+        dd($data);
       try {
         DB::beginTransaction();
         $order = new transaksi();
@@ -265,7 +267,7 @@ class PelayananController extends Controller
         $select .= '
                     <div class="form-group has-success">
                     <label for="id" class="control-label">Pilih Hari</label>
-                    <select id="hari" class="form-control" name="hari" value="hari">
+                    <select id="hari[]" class="form-control" name="hari[]" value="hari">
                     ';
                     foreach ($list_jenis as $hari) {
         $select .= '<option value="'.$hari->hari.'">'.$hari->hari.'</option>';
