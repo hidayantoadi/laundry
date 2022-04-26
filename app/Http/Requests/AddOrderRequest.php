@@ -23,7 +23,12 @@ class AddOrderRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = array();
+//        foreach ($this->input('gr') as $index => $grs) {
+//            $gr = 'gr.' . $index ;
+//            $rules[$gr] = 'required|regex:/^[0-9.]+$/|numeric';
+//        }        
+        return array_merge([
           'status_payment'    => 'required',
           'kg'                => 'required|regex:/^[0-9.]+$/|numeric',
           'hari'              => 'required',
@@ -32,12 +37,13 @@ class AddOrderRequest extends FormRequest
           'disc'              => 'nullable|numeric',
           'harga_id'          => 'required',
           'customer_id'       => 'required'
-        ];
+        ],$rules);
+            
     }
 
     public function messages()
     {
-      return [
+      $array = array (
         'status_payment.required'   => 'Status Pembayaran wajib dipilih.',
         'kg.required'               => 'Berat Pakaian tidak boleh kosong.',
         'kg.numeric'                => 'Berat Pakaian hanya mendukung angka.',
@@ -47,6 +53,56 @@ class AddOrderRequest extends FormRequest
         'disc.numeric'              => 'Diskon hanya mendukung angka.',
         'harga_id.required'         => 'Jenis Pakaian wajib dipilih.',
         'customer_id.required'      => 'Customer wajib dipilih.'
-      ];
+        );
+//        foreach ($this->input('gr') as $index => $grs) {
+//            $gr = 'gr.' . $index ;
+//            $array[$gr.'.required'] = 'Berat gr tidak boleh kosong.';
+//            $array[$gr.'.numeric'] = 'Berat gr hanya mendukung angka.';
+//        }              
+        return $array;                  
     }
 }
+
+//---
+//Insert Multiple Data Pada Laravel part 1
+//Insert Multiple Data Pada Laravel part 2
+//Insert Multiple Data Pada Laravel part 3
+//---
+//<form ...
+//{{ csrf_field() }}
+//name = xxx[]
+//
+//@csrf
+//
+//
+//
+//---------
+//
+//
+//$data = $request->all();
+//dd($data);
+//
+//$customer = new Customer;
+//$customer->nama = $data['nama'];
+//$customer->email = $data['email'];
+//$customer->save();
+//
+//$detail = new Detail;
+//$detail->user_id = $customer->id;
+//$detail->address = $data['address];
+//$detail->phone = $data['phone];
+//$detail->zip = $data['zip];
+//$detail->save();
+//
+//if(count($data['address'])>0){
+//    foreach($data['address'] as $item => $value){
+//        $data2 = array(
+//            'user_id' => $customer->id,
+//            'address' => $data['address'][$item],
+//            'phone'   => $data['phone'][$item],
+//            'zip'     => $data['zip'][$item],                    
+//        );
+//        Detail::create($data2);
+//    }
+//}
+//---
