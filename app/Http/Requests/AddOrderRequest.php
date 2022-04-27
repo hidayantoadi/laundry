@@ -30,12 +30,12 @@ class AddOrderRequest extends FormRequest
 //        }        
         return array_merge([
           'status_payment'    => 'required',
-          'kg'                => 'required|regex:/^[0-9.]+$/|numeric',
-          'hari'              => 'required',
-          'harga'             => 'required',
+//          'kg'                => 'required|regex:/^[0-9.]+$/|numeric',
+//          'hari'              => 'required',
+//          'harga'             => 'required',
           'jenis_pembayaran'  => 'required',
-          'disc'              => 'nullable|numeric',
-          'harga_id'          => 'required',
+//          'disc'              => 'nullable|numeric',
+//          'harga_id'          => 'required',
           'customer_id'       => 'required'
         ],$rules);
             
@@ -45,13 +45,13 @@ class AddOrderRequest extends FormRequest
     {
       $array = array (
         'status_payment.required'   => 'Status Pembayaran wajib dipilih.',
-        'kg.required'               => 'Berat Pakaian tidak boleh kosong.',
-        'kg.numeric'                => 'Berat Pakaian hanya mendukung angka.',
-        'hari.required'             => 'Hari tidak boleh kosong.',
-        'harga.required'            => 'Harga tidak boleh kosong.',
+//        'kg.required'               => 'Berat Pakaian tidak boleh kosong.',
+//        'kg.numeric'                => 'Berat Pakaian hanya mendukung angka.',
+//        'hari.required'             => 'Hari tidak boleh kosong.',
+//        'harga.required'            => 'Harga tidak boleh kosong.',
         'jenis_pembayaran.required' => 'Jenis Pembayaran wajib dipilih.',
-        'disc.numeric'              => 'Diskon hanya mendukung angka.',
-        'harga_id.required'         => 'Jenis Pakaian wajib dipilih.',
+//        'disc.numeric'              => 'Diskon hanya mendukung angka.',
+//        'harga_id.required'         => 'Jenis Pakaian wajib dipilih.',
         'customer_id.required'      => 'Customer wajib dipilih.'
         );
 //        foreach ($this->input('gr') as $index => $grs) {
