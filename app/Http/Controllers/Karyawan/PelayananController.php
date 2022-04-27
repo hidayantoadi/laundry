@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{transaksi,User,harga,DataBank};
+use App\Models\{transaksi,User,harga,DataBank,transaksidetail};
 use App\Http\Requests\{AddCustomerRequest,AddOrderRequest};
 use App\Notifications\{OrderMasuk,OrderSelesai};
 use App\Jobs\{OrderCustomerJob,DoneCustomerJob};
@@ -31,31 +31,30 @@ class PelayananController extends Controller
     // Proses simpan order
     public function store(AddOrderRequest $request)
     {
-        $data = $request->all();
-        dd($data);
+//        $data = $request->all();
+//        dd($data);
       try {
+        $kgs          = $request->kg;
+        $harga_ids    = $request->harga_id;
+        $haris        = $request->hari;
+        $hargas       = $request->harga;
+        $discs        = $request->disc;                  
         DB::beginTransaction();
         $order = new transaksi();
         $order->invoice         = $request->invoice;
         $order->tgl_transaksi   = Carbon::now()->parse($order->tgl_transaksi)->format('d-m-Y');
         $order->status_payment  = $request->status_payment;
-        $order->harga_id        = $request->harga_id;
         $order->customer_id     = $request->customer_id;
         $order->user_id         = Auth::user()->id;
         $order->customer        = namaCustomer($order->customer_id);
-        $order->email_customer  = email_customer($order->customer_id);
-        $order->hari            = $request->hari;
-        $order->kg              = $request->kg;
-        $order->harga           = $request->harga;
-        $order->disc            = $request->disc;
-        $hitung                 = $order->kg * $order->harga;
-        if ($request->disc != NULL) {
-            $disc                = ($hitung * $order->disc) / 100;
-            $total               = $hitung - $disc;
-            $order->harga_akhir  = $total;
-        } else {
-          $order->harga_akhir    = $hitung;
-        }
+        $order->email_customer  = email_customer($order->customer_id);        
+        $order->harga_id        = $request->harga_id[0];
+        $order->hari            = $request->totalHari;
+        $order->kg              = $request->totalKG;
+        $order->harga           = $request->totalHarga;
+        $order->disc            = $request->disc[0];
+        $hitung                 = $request->totalAll;
+        $order->harga_akhir    = $hitung;
         $order->jenis_pembayaran  = $request->jenis_pembayaran;
         $order->tgl               = Carbon::now()->day;
         $order->bulan             = Carbon::now()->month;
@@ -63,35 +62,55 @@ class PelayananController extends Controller
         $order->save();
 
         if ($order) {
-          // Notification Telegram
-          if (setNotificationTelegramIn(1) == 1) {
-            $order->notify(new OrderMasuk());
-          }
-
-          // Notification email
-          if (setNotificationEmail(1) == 1) {
-            // Menyiapkan data Email
-            $bank = DataBank::get();
-            $jenisPakaian = harga::where('id', $order->harga_id)->first();
-            $data = array(
-                'email'         => $order->email_customer,
-                'invoice'       => $order->invoice,
-                'customer'      => $order->customer,
-                'tgl_transaksi' => $order->tgl_transaksi,
-                'pakaian'       => $jenisPakaian->jenis,
-                'berat'         => $order->kg,
-                'harga'         => $order->harga,
-                'harga_disc'    => ($hitung * $order->disc) / 100,
-                'disc'          => $order->disc,
-                'total'         => $order->kg * $order->harga,
-                'harga_akhir'   => $order->harga_akhir,
-                'laundry_name'  => Auth::user()->nama_cabang,
-                'bank'          => $bank
-            );
-
-            // Kirim Email
-            dispatch(new OrderCustomerJob($data));
-          }
+//          // Notification Telegram
+//          if (setNotificationTelegramIn(1) == 1) {
+//            $order->notify(new OrderMasuk());
+//          }
+//
+//          // Notification email
+//          if (setNotificationEmail(1) == 1) {
+//            // Menyiapkan data Email
+//            $bank = DataBank::get();
+//            $jenisPakaian = harga::where('id', $order->harga_id)->first();
+//            $data = array(
+//                'email'         => $order->email_customer,
+//                'invoice'       => $order->invoice,
+//                'customer'      => $order->customer,
+//                'tgl_transaksi' => $order->tgl_transaksi,
+//                'pakaian'       => $jenisPakaian->jenis,
+//                'berat'         => $order->kg,
+//                'harga'         => $order->harga,
+//                'harga_disc'    => ($hitung * $order->disc) / 100,
+//                'disc'          => $order->disc,
+//                'total'         => $order->kg * $order->harga,
+//                'harga_akhir'   => $order->harga_akhir,
+//                'laundry_name'  => Auth::user()->nama_cabang,
+//                'bank'          => $bank
+//            );
+//
+//            // Kirim Email
+//            dispatch(new OrderCustomerJob($data));
+//          }
+            DB::commit();
+            DB::beginTransaction();          
+            foreach($kgs as $key => $kg) {
+                $orderDtl               = new transaksidetail();
+                $orderDtl->id_transaksis = $order->id;
+                $orderDtl->harga_id      = isset($harga_ids[$key]) ? $harga_ids[$key] : 0;
+                $orderDtl->kg            = $kg;
+                $orderDtl->hari          = isset($haris[$key]) ? $haris[$key] : '0';
+                $orderDtl->harga         = isset($hargas[$key]) ? $hargas[$key] : '0';
+                $orderDtl->disc          = isset($discs[$key]) ? $discs[$key] : '0';
+                $hitung                  = $orderDtl->kg * $orderDtl->harga;
+                if ($orderDtl->disc != NULL) {
+                    $disc                = ($hitung * $orderDtl->disc) / 100;
+                    $total               = $hitung - $disc;
+                    $orderDtl->harga_akhir  = $total;
+                } else {
+                    $orderDtl->harga_akhir    = $hitung;
+                }                
+                $orderDtl->save();                 
+            }          
           DB::commit();
           Session::flash('success','Order Berhasil Ditambah !');
           return redirect('pelayanan');
@@ -245,7 +264,7 @@ class PelayananController extends Controller
         $select .= '
                     <div class="form-group has-success">
                     <label for="id" class="control-label">Harga</label>
-                    <select id="harga[]" class="form-control" name="harga[]" value="harga">
+                    <select id="harga" class="form-control" name="harga[]" value="harga">
                     ';
                     foreach ($list_harga as $studi) {
         $select .= '<option value="'.$studi->harga.'">'.'Rp. ' .number_format($studi->harga,0,",",".").'</option>';
@@ -267,7 +286,7 @@ class PelayananController extends Controller
         $select .= '
                     <div class="form-group has-success">
                     <label for="id" class="control-label">Pilih Hari</label>
-                    <select id="hari[]" class="form-control" name="hari[]" value="hari">
+                    <select id="hari" class="form-control" name="hari[]" value="hari">
                     ';
                     foreach ($list_jenis as $hari) {
         $select .= '<option value="'.$hari->hari.'">'.$hari->hari.'</option>';
