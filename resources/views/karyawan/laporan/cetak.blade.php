@@ -86,9 +86,9 @@
                     <th class="text-right">Diskon</th>                    
                     <th class="text-right">Total</th>
                 </tr>
-                @foreach ($invoiceDtl as $item)
+                @foreach ($invoiceDtl as $key => $item)
                 <tr>
-                    <td class="text-center">1</td>
+                    <td class="text-center">{{$key+1}}</td>
                     <td>{{$item->price->jenis}}</td>
                     <td class="text-right">{{$item->kg}} Kg</td>
                     <td class="text-right">{{Rupiah::getRupiah($item->harga)}} /kg</td>
