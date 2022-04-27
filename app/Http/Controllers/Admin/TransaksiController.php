@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{transaksi,user};
+use App\Models\{transaksi,user,transaksidetail};
 use Rupiah;
 
 class TransaksiController extends Controller
@@ -65,8 +65,9 @@ class TransaksiController extends Controller
 
       $dataInvoice = transaksi::with('customers','user')
       ->where('invoice', $request->invoice)
-      ->first();
-
-      return view('modul_admin.transaksi.invoice', compact('invoice','dataInvoice'));
+      ->first();         
+      
+      $invoiceDtl = transaksidetail::where('id_transaksis',$invoice[0]->id)->get();  
+      return view('modul_admin.transaksi.invoice', compact('invoice','dataInvoice','invoiceDtl'));
     }
 }
