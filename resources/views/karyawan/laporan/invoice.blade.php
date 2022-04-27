@@ -14,7 +14,7 @@
                         <p class="text-muted m-l-5"> Diterima Oleh <span style="margin-left:20px"> </span>: {{$data->user->name}}
                             <br/> Alamat <span style="margin-left:70px"> </span>: {{$data->user->alamat_cabang}},
                             <br/> No. Telp <span style="margin-left:65px"> </span>: {{$data->user->no_telp}}
-                            </p>
+                        </p>
                     </address>
                 </div>
                 <div class="pull-right text-right">
@@ -27,7 +27,7 @@
                         <p class="m-t-30"><b>Tanggal Masuk :</b> <i class="fa fa-calendar"></i> {{carbon\carbon::parse($data->tgl_transaksi)->format('d-m-Y')}}</p>
                         <p><b>Tanggal Diambil :</b> <i class="fa fa-calendar"></i>
                             @if ($data->tgl_ambil == "")
-                                Belum Diambil
+                            Belum Diambil
                             @else
                             {{\carbon\carbon::parse($data->tgl_ambil)->format('d-m-Y')}}
                             @endif
@@ -44,21 +44,23 @@
                                 <th>Jenis Pakaian</th>
                                 <th class="text-right">Berat</th>
                                 <th class="text-right">Harga</th>
+                                <th class="text-right">Diskon</th>
                                 <th class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($invoice as $item)
-                                <tr>
-                                    <td class="text-center">1</td>
-                                    <td>{{$item->price->jenis}}</td>
-                                    <td class="text-right">{{$item->kg}} / kg</td>
-                                    <td class="text-right">{{Rupiah::getRupiah($item->harga)}} /kg</td>
-                                    <td class="text-right">
-                                        <input type="hidden" value="{{$hitung = $item->kg * $item->harga}}">
-                                        <p>{{Rupiah::getRupiah($hitung)}}</p>
-                                    </td>
-                                </tr>
+                            @foreach ($invoiceDtl as $item)
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td>{{$item->price->jenis}}</td>
+                                <td class="text-right">{{$item->kg}} Kg</td>
+                                <td class="text-right">{{Rupiah::getRupiah($item->harga)}} /kg</td>
+                                <td class="text-right">{{Rupiah::getRupiah((($item->harga*$item->kg)*$item->disc)/100)}}</td>
+                                <td class="text-right">                                        
+                                        <p>{{Rupiah::getRupiah($item->harga_akhir)}}</p>
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -67,27 +69,24 @@
                 <div class="pull-left m-t-10">
                     <h6 style="font-weight:bold">Metode Pembayaran :</h6>
                     <ol>
-                      @foreach ($bank as $banks)
+                        @foreach ($bank as $banks)
                         <li style="color: white"> {{$banks->nama_bank}} <br> {{$banks->no_rekening}} a/n {{$banks->nama_pemilik}}</li>
-                      @endforeach
+                        @endforeach
                     </ol>
                 </div>
+                @foreach ($invoice as $itemHdr)
                 <div class="pull-right m-t-10 text-right">
-                    <p>Total : {{Rupiah::getRupiah($hitung)}}</p>
-                    <p>Disc @if ($item->disc == "")
-                        (0 %)
-                    @else
-                        ({{$item->disc}} %)
-                    @endif :  </p>
+                    <p>Total : {{Rupiah::getRupiah($itemHdr->harga)}}</p>
+                    <p>Disc  : {{Rupiah::getRupiah($itemHdr->harga - $itemHdr->harga_akhir)}} </p>
                     <hr>
-                    <h3><b>Total Bayar :</b> {{Rupiah::getRupiah($item->harga_akhir)}}</h3>
+                    <h3><b>Total Bayar :</b> {{Rupiah::getRupiah($itemHdr->harga_akhir)}}</h3>
                 </div>
                 @endforeach
                 <div class="clearfix"></div>
                 <hr>
                 <div class="text-right">
                     <a href="{{url('pelayanan')}}" class="btn btn-outline btn-danger" style="color:white">Back</a>
-                    <a href="{{url('cetak-invoice/'.$item->id. '/print')}}" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
+                    <a href="{{url('cetak-invoice/'.$itemHdr->id. '/print')}}" target="_blank" class="btn btn-success"><i class="fa fa-print"></i> Print</a>
                 </div>
             </div>
         </div>
