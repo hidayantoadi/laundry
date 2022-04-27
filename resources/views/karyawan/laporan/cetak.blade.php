@@ -49,11 +49,11 @@
         <table>
             <thead>
                 <tr>
-                    <th colspan="4">Invoice <strong>{{$data->invoice}}</strong></th>
+                    <th colspan="5">Invoice <strong>{{$data->invoice}}</strong></th>
                     <th>{{ $data->created_at->format('d-M-Y') }}</th>
                 </tr>
                 <tr>
-                    <td style="padding-bottom:80px" colspan="2">
+                    <td style="padding-bottom:80px" colspan="3">
                         <h3 style="color:coral">{{$data->nama_cabang}}</h3>
                         <p class="text-muted m-l-5"> Diterima Oleh <span style="margin-left:8px"> </span>: {{$data->user->name}}
                             <br/> Alamat <span style="margin-left:62px"> </span>: {{$data->user->alamat_cabang}},
@@ -65,9 +65,9 @@
                         <p style="text-align:right">
                             {{$data->customers->nama}}
                             <br/> {{$data->customers->alamat}}
-                            <br/> {{$data->customers->no_telp}}</p> <br>
-                        <p style="text-align:right"><b>Tanggal Masuk :</b> <i class="fa fa-calendar"></i> {{carbon\carbon::parse($data->tgl_transaksi)->format('d-m-y')}}</p>
-                        <p style="text-align:right"><b>Tanggal Diambil :</b> <i class="fa fa-calendar"></i>
+                            <br/> {{$data->customers->no_telp}}</p> 
+                        <br/><p style="text-align:right"><b>Tanggal Masuk :</b> <i class="fa fa-calendar"></i> {{carbon\carbon::parse($data->tgl_transaksi)->format('d-m-y')}}</p>
+                        <br/><p style="text-align:right"><b>Tanggal Diambil :</b> <i class="fa fa-calendar"></i>
                             @if ($data->tgl_ambil == "")
                                 Belum Diambil
                             @else
@@ -83,30 +83,31 @@
                     <th>Jenis Pakaian</th>
                     <th class="text-right">Berat</th>
                     <th class="text-right">Harga</th>
+                    <th class="text-right">Diskon</th>                    
                     <th class="text-right">Total</th>
                 </tr>
-                @foreach ($invoice as $item)
+                @foreach ($invoiceDtl as $item)
                 <tr>
-                    <td style="color:black">1</td>
-                    <td style="color:black">{{$item->price->jenis}}</td>
-                    <td style="color:black">{{$item->kg}} Kg</td>
-                    <td style="color:black">{{Rupiah::getRupiah($item->harga)}} /Kg</td>
-                    <td><input type="hidden" value="{{$hitung = $item->kg * $item->harga}}">
-                        <p style="color:black">{{Rupiah::getRupiah($hitung)}}</p></td>
+                    <td class="text-center">1</td>
+                    <td>{{$item->price->jenis}}</td>
+                    <td class="text-right">{{$item->kg}} Kg</td>
+                    <td class="text-right">{{Rupiah::getRupiah($item->harga)}} /kg</td>
+                    <td class="text-right">{{Rupiah::getRupiah((($item->harga*$item->kg)*$item->disc)/100)}}</td>
+                    <td class="text-right">                                        
+                            <p>{{Rupiah::getRupiah($item->harga_akhir)}}</p>
+                    </td>
                 </tr>
                 @endforeach
+                @foreach ($invoice as $itemHdr)
                 <tr>
-                    <th colspan="4">Disc @if ($item->disc == "")
-                        0 %
-                    @else
-                        {{$item->disc}} %
-                    @endif </th>
-                    <td style="color:black"><input type="hidden" value="{{$disc = ($hitung * $item->disc) / 100}}"> {{Rupiah::getRupiah($disc)}}</td>
+                    <th colspan="5">Total Diskon </th>
+                    <td style="color:black"> {{Rupiah::getRupiah($itemHdr->harga - $itemHdr->harga_akhir)}}</td>
                 </tr>
                 <tr>
-                    <th colspan="4">Total Bayar</th>
-                    <td style="color:black; font-weight:bold">{{Rupiah::getRupiah($item->harga_akhir)}}</td>
+                    <th colspan="5">Total Bayar</th>
+                    <td style="color:black; font-weight:bold">{{Rupiah::getRupiah($itemHdr->harga_akhir)}}</td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
         <h6>Metode Pembayaran :</h6>
