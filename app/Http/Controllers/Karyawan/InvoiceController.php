@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Karyawan;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{transaksi,DataBank};
+use App\Models\{transaksi,DataBank,transaksidetail};
 use Auth;
 use PDF;
 class InvoiceController extends Controller
@@ -23,7 +23,9 @@ class InvoiceController extends Controller
       ->first();
 
       $bank = DataBank::get();
-      return view('karyawan.laporan.invoice', compact('invoice','data','bank'));
+      
+      $invoiceDtl = transaksidetail::where('id_transaksis',$request->id)->get();            
+      return view('karyawan.laporan.invoice', compact('invoice','data','bank','invoiceDtl'));
     }
 
     // Cetak invoice
@@ -41,7 +43,8 @@ class InvoiceController extends Controller
 
       $bank = DataBank::get();
 
-      $pdf = PDF::loadView('karyawan.laporan.cetak', compact('invoice','data','bank'))->setPaper('a4', 'landscape');
+      $invoiceDtl = transaksidetail::where('id_transaksis',$request->id)->get();            
+      $pdf = PDF::loadView('karyawan.laporan.cetak', compact('invoice','data','bank','invoiceDtl'))->setPaper('a4', 'landscape');
       return $pdf->stream();
     }
 }
