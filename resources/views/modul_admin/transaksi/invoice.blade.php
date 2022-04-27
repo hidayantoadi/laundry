@@ -51,21 +51,23 @@
                                 <th>Jenis Pakaian</th>
                                 <th class="text-right">Berat</th>
                                 <th class="text-right">Harga</th>
+                                <th class="text-right">Diskon</th>
                                 <th class="text-right">Sub Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                          @foreach ($invoice as $key => $item)
+                          @foreach ($invoiceDtl as $key => $item)
                             <tr>
                                 <td class="text-center">{{$key+1}}</td>
                                 <td>{{$item->price->jenis}}</td>
                                 <td class="text-right">{{$item->kg}} Kg</td>
                                 <td class="text-right">{{Rupiah::getRupiah($item->harga)}} /Kg</td>
-                                <td class="text-right">
-                                    <input type="hidden" value="{{$hitung = $item->kg * $item->harga}}">
-                                    <p style="color:white">{{Rupiah::getRupiah($hitung)}}</p>
+                                <td class="text-right">{{Rupiah::getRupiah((($item->harga*$item->kg)*$item->disc)/100)}}</td>
+                                <td class="text-right">                                        
+                                        <p>{{Rupiah::getRupiah($item->harga_akhir)}}</p>
                                 </td>
                             </tr>
+                          @endforeach  
                         </tbody>
                     </table>
                 </div>
@@ -78,15 +80,12 @@
                         2. Isi Deskripsi
                     </p>
                 </div>
+                @foreach ($invoice as $itemHdr)
                 <div class="pull-right m-t-10 text-right">
-                    <p>Total : {{Rupiah::getRupiah($hitung)}}</p>
-                    <p>Disc @if ($item->disc == "")
-                        (0 %)
-                    @else
-                        ({{$item->disc}} %)
-                    @endif :  <input type="hidden" value="{{$disc = ($hitung * $item->disc   ) / 100}}"> {{Rupiah::getRupiah($disc)}} </p>
+                    <p>Total : {{Rupiah::getRupiah($itemHdr->harga)}}</p>
+                    <p>Disc  : {{Rupiah::getRupiah($itemHdr->harga - $itemHdr->harga_akhir)}} </p>
                     <hr>
-                    <h3><b>Total Bayar :</b> {{Rupiah::getRupiah($hitung - $disc)}}</h3>
+                    <h3><b>Total Bayar :</b> {{Rupiah::getRupiah($itemHdr->harga_akhir)}}</h3>
                 </div>
                 @endforeach
                 <div class="clearfix"></div>
