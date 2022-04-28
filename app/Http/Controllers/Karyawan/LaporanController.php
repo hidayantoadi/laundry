@@ -12,7 +12,7 @@ class LaporanController extends Controller
     //Halaman Laporan
     public function laporan()
     {
-      $laporan = transaksi::where('user_id', Auth::id())->whereIn('status_order',['Done','Delivery'])->get();
+      $laporan = transaksi::with('detailTransaksi')->where('user_id', Auth::id())->whereIn('status_order',['Done','Delivery'])->get();
       return view('karyawan.laporan.index', compact('laporan'));
     }
 }
