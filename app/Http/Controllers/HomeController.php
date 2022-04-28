@@ -190,7 +190,7 @@ class HomeController extends Controller
             $totalLaundry = transaksi::where('customer_id',Auth::id())->count();
             $totalLaundryKg = transaksi::where('customer_id',Auth::id())->sum('kg');
 
-            $transaksi = transaksi::with('price')->where('customer_id',Auth::id())->get();
+            $transaksi = transaksi::where('customer_id',Auth::id())->get();
 
             return view('customer.index',\compact('totalLaundry','totalLaundryKg','transaksi'));
           }
