@@ -23,7 +23,11 @@
                         <tr>
                           <td>{{$no}}</td>
                           <td>{{namaCustomer($laporans->customer_id)}}</td>
-                          <td>{{$laporans->price->jenis}}</td>
+                          <td>                              
+                                @foreach ($laporans->detailTransaksi as $dtl)
+                                {{$dtl->price->jenis}} ({{$dtl->kg}} Kg) <br>
+                                @endforeach
+                          </td>
                           <td>{{$laporans->jenis_pembayaran}}</td>
                           <td>{{Rupiah::getRupiah($laporans->harga_akhir)}}</td>
                         </tr>
