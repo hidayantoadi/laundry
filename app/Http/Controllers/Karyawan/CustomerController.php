@@ -102,4 +102,48 @@ class CustomerController extends Controller
       }
       return $st;
     }
+
+    // Hapus
+    public function deletecust($id)
+    {
+      try {
+        DB::beginTransaction();
+	      // menghapus data pelanggan berdasarkan id yang dipilih
+	      DB::table('users')->where('id',$id)->delete();
+        DB::commit();
+        Session::flash('success','Data pelanggan sudah sukses dihapus');
+        return redirect('customers');
+      } catch (ErrorException $e) {
+        DB::rollback();
+        throw new ErrorException($e->getMessage());
+      }      
+    }  
+
+    //Edit pelanggan
+    public function editcust($id)
+    {
+      $pelanggan = DB::table('users')->where('id',$id)->get();
+      return view('karyawan.customer.edit',['pelanggan' => $pelanggan]);
+    }    
+
+    //save edit pelanggan    
+    public function saveeditcust(Request $request){
+      try {
+        DB::beginTransaction();      
+        // update data pelanggan
+        DB::table('users')->where('id',$request->id)->update([
+          'name' => $request->name,
+          'email' => $request->email,
+          'no_telp' => $request->no_telp,
+          'alamat' => $request->alamat
+        ]);
+        DB::commit();
+        Session::flash('success','Perubahan data pelanggan sukses');
+        return redirect('customers');      
+      } catch (ErrorException $e) {
+        DB::rollback();
+        throw new ErrorException($e->getMessage());
+      }         
+    }
+   
 }
