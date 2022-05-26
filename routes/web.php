@@ -70,6 +70,9 @@ Route::middleware('auth')->group(function () {
     Route::get('customers/{id}','Karyawan\CustomerController@detail');
     Route::get('customers-create','Karyawan\CustomerController@create');
     Route::post('customers-store','Karyawan\CustomerController@store');
+    Route::get('customers-delete/{id}','Karyawan\CustomerController@deletecust');
+    Route::get('customers-edit/{id}','Karyawan\CustomerController@editcust');
+    Route::post('customers-saveeditcust','Karyawan\CustomerController@saveeditcust');
 
     // Filter
     Route::get('listharga','Karyawan\PelayananController@listharga');
