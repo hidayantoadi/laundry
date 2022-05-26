@@ -39,6 +39,8 @@
                         <td>{{$item->no_telp}}</td>
                         <td>
                           <a href=" {{url('customers', $item->id)}} " class="btn btn-sm btn-primary" style="color:white">Detail</a>
+                          <a href=" {{url('customers-edit', $item->id)}} " class="btn btn-sm btn-success" style="color:white">Edit</a>
+                          <a href=" {{url('customers-delete', $item->id)}} " class="btn btn-sm btn-danger" style="color:white">Hapus</a>
                         </td>
                     </tr>
                     <?php $no++; ?>
